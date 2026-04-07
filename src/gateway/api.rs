@@ -822,7 +822,7 @@ pub async fn handle_api_channels(
                 "enabled": true,
                 "status": "active",
                 "message_count": 0,
-                "last_message_at": null::<String>,
+                "last_message_at": null,
                 "health": "healthy",
             }))
         })
