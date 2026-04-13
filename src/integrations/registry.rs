@@ -284,13 +284,25 @@ pub fn all_integrations() -> Vec<IntegrationEntry> {
             name: "Hugging Face",
             description: "Open-source models",
             category: IntegrationCategory::AiModel,
-            status_fn: |_| IntegrationStatus::ComingSoon,
+            status_fn: |c| {
+                if matches!(c.default_provider.as_deref(), Some("huggingface" | "hf")) {
+                    IntegrationStatus::Active
+                } else {
+                    IntegrationStatus::Available
+                }
+            },
         },
         IntegrationEntry {
             name: "LM Studio",
             description: "Local model server",
             category: IntegrationCategory::AiModel,
-            status_fn: |_| IntegrationStatus::ComingSoon,
+            status_fn: |c| {
+                if matches!(c.default_provider.as_deref(), Some("lmstudio" | "lm-studio")) {
+                    IntegrationStatus::Active
+                } else {
+                    IntegrationStatus::Available
+                }
+            },
         },
         IntegrationEntry {
             name: "Venice",
@@ -834,6 +846,7 @@ mod tests {
     fn telegram_active_when_configured() {
         let mut config = Config::default();
         config.channels_config.telegram = Some(TelegramConfig {
+            enabled: true,
             bot_token: "123:ABC".into(),
             allowed_users: vec!["user".into()],
             stream_mode: StreamMode::default(),
@@ -863,6 +876,7 @@ mod tests {
     fn imessage_active_when_configured() {
         let mut config = Config::default();
         config.channels_config.imessage = Some(IMessageConfig {
+            enabled: true,
             allowed_contacts: vec!["*".into()],
         });
         let entries = all_integrations();
@@ -885,6 +899,7 @@ mod tests {
     fn matrix_active_when_configured() {
         let mut config = Config::default();
         config.channels_config.matrix = Some(MatrixConfig {
+            enabled: true,
             homeserver: "https://m.org".into(),
             access_token: "tok".into(),
             user_id: None,
